@@ -1,0 +1,23 @@
+{% load core_tags %}
+<section class="section section--alt">
+    <div class="container container--narrow">
+        {% if value.heading %}
+        <div class="section-head" style="max-width:none;">
+            <h2>{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+        <div class="grid grid-2">
+            {% for doc in value.documents %}
+            <a class="card card--relative flex-center gap-md" style="flex-direction:row; padding: var(--space-md);" href="{{ doc.url }}">
+                <div class="value-card__icon" style="margin:0;">{% icon_svg 'download' %}</div>
+                <div>
+                    <div class="card__title" style="font-size: var(--fs-md);">{{ doc.title }}</div>
+                    <div class="card__meta">{{ doc.file_extension|upper }} · {{ doc.file_size|filesizeformat }}</div>
+                </div>
+            </a>
+            {% empty %}
+            <p>Aucun document disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>

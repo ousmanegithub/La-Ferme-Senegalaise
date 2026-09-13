@@ -1,0 +1,12 @@
+<section class="section">
+    <div class="container container--narrow">
+        {% if value.heading %}
+        <div class="section-head section-head--center" style="max-width:none;">
+            <h2>{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+        <div style="border-radius: var(--radius-lg); overflow:hidden; box-shadow: var(--shadow-md);">
+            {{ value.embed }}
+        </div>
+    </div>
+</section>

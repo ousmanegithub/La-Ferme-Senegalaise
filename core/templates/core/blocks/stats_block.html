@@ -1,0 +1,17 @@
+<section class="section section--earth">
+    <div class="container">
+        {% if value.heading %}
+        <div class="section-head section-head--center" style="max-width:none;">
+            <h2>{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+        <div class="stats">
+            {% for stat in value.stats %}
+            <div class="stat">
+                <div class="stat__number">{{ stat.number }}</div>
+                <div class="stat__label">{{ stat.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

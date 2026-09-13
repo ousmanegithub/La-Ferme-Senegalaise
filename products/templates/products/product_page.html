@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-product{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: var(--space-md);">
+    {% include "includes/breadcrumbs.html" %}
+</div>
+
+<section class="section section--tight">
+    <div class="container">
+        <div class="split">
+            <div class="split__media">
+                {% if page.cover_image %}
+                {% image page.cover_image fill-800x800 as img %}
+                <img src="{{ img.url }}" alt="{{ page.title }}">
+                {% else %}
+                <div class="media-fallback">{% icon_svg page.category.icon|default:'leaf' %}</div>
+                {% endif %}
+            </div>
+            <div>
+                {% if page.category %}<span class="eyebrow">{% icon_svg page.category.icon %} {{ page.category.name }}</span>{% endif %}
+                <h1>{{ page.title }}</h1>
+                <p class="lede">{{ page.short_description }}</p>
+                <div class="flex-center gap-md flex-wrap" style="margin: var(--space-md) 0;">
+                    <span class="badge {% if page.availability == 'coming_soon' %}badge--orange{% elif page.availability == 'seasonal' %}badge--gold{% endif %}">
+                        {% icon_svg 'check-circle' %} {{ page.get_availability_display }}
+                    </span>
+                    {% if page.price_indication %}
+                    <span class="badge badge--blue">{{ page.price_indication }}{% if page.unit %} / {{ page.unit }}{% endif %}</span>
+                    {% endif %}
+                </div>
+                <a class="btn btn--primary" href="/contact/">Demander ce produit {% icon_svg 'arrow-right' %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ page.body }}
+{% endblock %}

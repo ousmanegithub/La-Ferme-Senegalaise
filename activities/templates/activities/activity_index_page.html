@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-activity-index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {% include "includes/breadcrumbs.html" %}
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lede">{{ page.intro|richtext }}</div>{% endif %}
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="grid grid-3">
+            {% for activity in activities %}
+            <article class="card card--relative">
+                <div class="card__media">
+                    {% if activity.cover_image %}
+                    {% image activity.cover_image fill-500x375 as img %}
+                    <img src="{{ img.url }}" alt="{{ activity.title }}" loading="lazy">
+                    {% else %}
+                    <div class="media-fallback">{% icon_svg activity.icon %}</div>
+                    {% endif %}
+                </div>
+                <div class="card__body">
+                    <span class="badge">{% icon_svg activity.icon %} {{ activity.get_icon_display }}</span>
+                    <h3 class="card__title"><a href="{% pageurl activity %}">{{ activity.title }}</a></h3>
+                    <p class="card__text">{{ activity.summary }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load wagtailcore_tags core_tags %}
+<nav class="breadcrumbs" aria-label="Fil d'Ariane">
+    <ol>
+        <li><a href="/">Accueil</a></li>
+        {% breadcrumb_ancestors page as ancestors %}
+        {% for ancestor in ancestors %}
+        <li><a href="{% pageurl ancestor %}">{{ ancestor.title }}</a></li>
+        {% endfor %}
+        <li aria-current="page">{{ page.title }}</li>
+    </ol>
+</nav>

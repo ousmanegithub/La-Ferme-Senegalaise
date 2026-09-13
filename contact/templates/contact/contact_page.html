@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags core_tags %}
+
+{% block body_class %}page-contact{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {% include "includes/breadcrumbs.html" %}
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lede">{{ page.intro|richtext }}</div>{% endif %}
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="split" style="align-items:start;">
+            <div class="card" style="padding: var(--space-lg); border-radius: var(--radius-lg);">
+                <form method="post" data-validate novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% if field.name == "website" %}
+                        <div class="form-honeypot" aria-hidden="true">
+                            <label for="{{ field.id_for_label }}">Ne pas remplir</label>
+                            {{ field }}
+                        </div>
+                        {% else %}
+                        <div class="form-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="required">*</span>{% endif %}</label>
+                            {{ field }}
+                            {% if field.help_text %}<p class="help-text">{{ field.help_text }}</p>{% endif %}
+                            {% if field.errors %}<ul class="errorlist">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn--primary btn--block">Envoyer le message {% icon_svg 'arrow-right' %}</button>
+                </form>
+            </div>
+
+            <div>
+                <div class="grid" style="gap: var(--space-md); margin-bottom: var(--space-lg);">
+                    {% if site_settings.address %}
+                    <div class="location-card">
+                        <div class="location-card__icon">{% icon_svg 'map-pin' %}</div>
+                        <div><strong>Adresse</strong><p style="margin:0.2rem 0 0;">{{ site_settings.address }}{% if site_settings.city %}, {{ site_settings.city }}{% endif %}</p></div>
+                    </div>
+                    {% endif %}
+                    {% if site_settings.phone %}
+                    <div class="location-card">
+                        <div class="location-card__icon">{% icon_svg 'phone' %}</div>
+                        <div><strong>Téléphone</strong><p style="margin:0.2rem 0 0;"><a href="tel:{{ site_settings.phone|cut:' ' }}">{{ site_settings.phone }}</a></p></div>
+                    </div>
+                    {% endif %}
+                    {% if site_settings.email %}
+                    <div class="location-card">
+                        <div class="location-card__icon">{% icon_svg 'mail' %}</div>
+                        <div><strong>E-mail</strong><p style="margin:0.2rem 0 0;"><a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></p></div>
+                    </div>
+                    {% endif %}
+                    {% if site_settings.whatsapp_number %}
+                    <div class="location-card">
+                        <div class="location-card__icon">{% icon_svg 'whatsapp' %}</div>
+                        <div><strong>WhatsApp</strong><p style="margin:0.2rem 0 0;"><a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p></div>
+                    </div>
+                    {% endif %}
+                    {% if site_settings.opening_hours %}
+                    <div class="location-card">
+                        <div class="location-card__icon">{% icon_svg 'clock' %}</div>
+                        <div><strong>Horaires</strong><p style="margin:0.2rem 0 0;">{{ site_settings.opening_hours }}</p></div>
+                    </div>
+                    {% endif %}
+                </div>
+                <a class="btn btn--secondary btn--block" href="/points-de-vente/">Voir tous nos points de vente {% icon_svg 'arrow-right' %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

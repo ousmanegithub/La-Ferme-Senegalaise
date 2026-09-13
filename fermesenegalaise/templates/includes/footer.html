@@ -1,0 +1,89 @@
+{% load static wagtailcore_tags core_tags %}
+<footer class="site-footer">
+    <div class="container footer-top">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="{% static 'images/brand/logo-white.png' %}" alt="La Ferme Sénégalaise">
+                {% if site_settings.footer_about_text %}
+                <div class="prose">{{ site_settings.footer_about_text|richtext }}</div>
+                {% else %}
+                <p>Une agriculture intégrée — production, élevage, pisciculture et transformation — au service de la souveraineté alimentaire du Sénégal.</p>
+                {% endif %}
+                <p class="footer-tagline">Nourrir l'Humanité en toute humanité</p>
+                <div class="footer-social">
+                    {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener">{% icon_svg 'facebook' %}</a>{% endif %}
+                    {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener">{% icon_svg 'instagram' %}</a>{% endif %}
+                    {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" aria-label="LinkedIn" target="_blank" rel="noopener">{% icon_svg 'linkedin' %}</a>{% endif %}
+                    {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" aria-label="YouTube" target="_blank" rel="noopener">{% icon_svg 'youtube' %}</a>{% endif %}
+                    {% if site_settings.tiktok_url %}<a href="{{ site_settings.tiktok_url }}" aria-label="TikTok" target="_blank" rel="noopener">{% icon_svg 'tiktok' %}</a>{% endif %}
+                </div>
+            </div>
+
+            <div>
+                <h3 class="footer-heading">L'entreprise</h3>
+                <ul class="footer-links">
+                    <li><a href="/qui-sommes-nous/">Qui sommes-nous</a></li>
+                    <li><a href="/nos-activites/">Nos activités</a></li>
+                    <li><a href="/nos-produits/">Nos produits</a></li>
+                    <li><a href="/partenaires-et-investisseurs/">Partenaires &amp; investisseurs</a></li>
+                    <li><a href="/actualites/">Actualités</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="footer-heading">Ressources</h3>
+                <ul class="footer-links">
+                    <li><a href="/galerie/">Galerie</a></li>
+                    <li><a href="/points-de-vente/">Points de vente</a></li>
+                    <li><a href="/ressources/">Brochures &amp; documents</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="footer-heading">Contact</h3>
+                <ul class="footer-contact">
+                    {% if site_settings.address %}
+                    <li>{% icon_svg 'map-pin' %} <span>{{ site_settings.address }}{% if site_settings.city %}, {{ site_settings.city }}{% endif %}</span></li>
+                    {% endif %}
+                    {% if site_settings.phone %}
+                    <li>{% icon_svg 'phone' %} <a href="tel:{{ site_settings.phone|cut:' ' }}">{{ site_settings.phone }}</a></li>
+                    {% endif %}
+                    {% if site_settings.email %}
+                    <li>{% icon_svg 'mail' %} <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></li>
+                    {% endif %}
+                    {% if site_settings.opening_hours %}
+                    <li>{% icon_svg 'clock' %} <span>{{ site_settings.opening_hours }}</span></li>
+                    {% endif %}
+                </ul>
+
+                {% if site_settings.newsletter_intro %}
+                <h3 class="footer-heading" style="margin-top:1.5rem;">Newsletter</h3>
+                <p style="font-size:var(--fs-sm);">{{ site_settings.newsletter_intro }}</p>
+                <form class="newsletter-form" action="/newsletter/inscription/" method="post" data-validate>
+                    {% csrf_token %}
+                    <label for="newsletter-email" class="visually-hidden">Adresse e-mail</label>
+                    <input id="newsletter-email" type="email" name="email" placeholder="Votre e-mail" required>
+                    <button type="submit" aria-label="S'inscrire">{% icon_svg 'arrow-right' %}</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <span>&copy; {% now "Y" %} {{ site_settings.copyright_holder|default:"La Ferme Sénégalaise SAS" }}. Tous droits réservés.</span>
+            <div class="footer-legal">
+                {% if site_settings.legal_notice_page %}<a href="{% pageurl site_settings.legal_notice_page %}">Mentions légales</a>{% endif %}
+                {% if site_settings.privacy_policy_page %}<a href="{% pageurl site_settings.privacy_policy_page %}">Confidentialité</a>{% endif %}
+                <a href="/sitemap.xml">Plan du site</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="lightbox" data-lightbox>
+    <button class="lightbox__close" aria-label="Fermer">{% icon_svg 'close' %}</button>
+    <div data-lightbox-media></div>
+</div>

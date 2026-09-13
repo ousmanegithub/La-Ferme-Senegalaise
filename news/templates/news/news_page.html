@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-news{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: var(--space-md);">
+    {% include "includes/breadcrumbs.html" %}
+</div>
+
+<section class="section section--tight">
+    <div class="container container--narrow">
+        <span class="eyebrow">{% icon_svg 'calendar' %} {{ page.date|date:"d F Y" }}</span>
+        <h1>{{ page.title }}</h1>
+        {% if page.tags.all %}
+        <div class="flex-center gap-xs flex-wrap" style="margin-bottom: var(--space-md);">
+            {% for tag in page.tags.all %}<span class="badge">{% icon_svg 'tag' %} {{ tag.name }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        {% if page.cover_image %}
+        {% image page.cover_image fill-1200x675 as img %}
+        <img src="{{ img.url }}" alt="{{ page.title }}" style="border-radius: var(--radius-lg); margin-bottom: var(--space-lg);">
+        {% endif %}
+        <div class="prose">
+            {{ page.body }}
+        </div>
+    </div>
+</section>
+
+<section class="section section--alt section--tight">
+    <div class="container container--narrow flex-between flex-wrap gap-md">
+        <a class="btn btn--ghost" href="{{ page.get_parent.url }}">{% icon_svg 'arrow-right' %} Retour aux actualités</a>
+        <div class="flex gap-sm">
+            <a class="btn btn--secondary btn--sm" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}">Partager sur Facebook</a>
+            <a class="btn btn--secondary btn--sm" target="_blank" rel="noopener" href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}">Partager sur WhatsApp</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

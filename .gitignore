@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django
+*.sqlite3
+/static/
+/media/
+db.sqlite3
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+fermesenegalaise/settings/local.py
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+server.log
+
+# Extracted working files (source docs stay, throwaway text dumps don't)
+cahier_extracted.txt
+charte_extracted.txt

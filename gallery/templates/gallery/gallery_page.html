@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-gallery{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {% include "includes/breadcrumbs.html" %}
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lede">{{ page.intro|richtext }}</div>{% endif %}
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="gallery-filters">
+            <button type="button" data-gallery-filter="all" class="is-active">Tout voir</button>
+            <button type="button" data-gallery-filter="exploitations">Nos exploitations</button>
+            <button type="button" data-gallery-filter="activites">Nos activités</button>
+            <button type="button" data-gallery-filter="realisations">Nos réalisations</button>
+            <button type="button" data-gallery-filter="evenements">Événements</button>
+        </div>
+
+        <div class="gallery-grid">
+            {% for item in page.images.all %}
+            {% image item.image width-1600 as full %}
+            {% image item.image fill-400x400 as thumb %}
+            <div class="gallery-item" data-gallery-category="{{ item.category }}" data-lightbox-trigger data-full="{{ full.url }}">
+                <img src="{{ thumb.url }}" alt="{{ item.caption }}" loading="lazy">
+            </div>
+            {% endfor %}
+
+            {% for video in page.videos.all %}
+            {% image video.thumbnail fill-400x400 as thumb %}
+            <div class="gallery-item" data-gallery-category="{{ video.category }}" data-lightbox-trigger data-embed="{{ video.embed_url }}">
+                <img src="{{ thumb.url }}" alt="{{ video.title }}" loading="lazy">
+                <div class="gallery-item__play">{% icon_svg 'play' %}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not page.images.all and not page.videos.all %}
+        <p>La galerie sera bientôt alimentée en photos et vidéos de nos exploitations.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

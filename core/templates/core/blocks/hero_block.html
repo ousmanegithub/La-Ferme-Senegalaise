@@ -1,0 +1,26 @@
+{% load wagtailimages_tags core_tags %}
+<section class="hero {% if not value.image %}hero--no-media{% endif %}">
+    {% if value.image %}
+    <div class="hero__media">
+        {% image value.image fill-1600x1000 as hero_img %}
+        <img src="{{ hero_img.url }}" alt="" loading="eager">
+    </div>
+    {% endif %}
+    <div class="hero__overlay hero__overlay--{{ value.overlay|default:'brand' }}"></div>
+    <div class="container">
+        <div class="hero__content">
+            {% if value.eyebrow %}<span class="eyebrow">{{ value.eyebrow }}</span>{% endif %}
+            <h1>{{ value.heading }}</h1>
+            {% if value.subheading %}<p class="hero__subheading">{{ value.subheading }}</p>{% endif %}
+            {% if value.buttons %}
+            <div class="hero__actions">
+                {% for button in value.buttons %}
+                <a class="btn {% if button.style == 'secondary' %}btn--secondary btn--on-dark{% else %}btn--primary{% endif %}" href="{{ button|resolve_button_url }}">
+                    {{ button.text }} {% icon_svg 'arrow-right' %}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

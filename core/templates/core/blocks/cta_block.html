@@ -1,0 +1,18 @@
+{% load core_tags %}
+<section class="section">
+    <div class="container">
+        <div class="cta-banner {% if value.style == 'dark' %}cta-banner--dark{% endif %}">
+            <h2>{{ value.heading }}</h2>
+            {% if value.text %}<p>{{ value.text }}</p>{% endif %}
+            {% if value.buttons %}
+            <div class="cta-banner__actions">
+                {% for button in value.buttons %}
+                <a class="btn {% if button.style == 'secondary' %}btn--secondary btn--on-dark{% else %}btn--primary{% endif %}" href="{{ button|resolve_button_url }}">
+                    {{ button.text }} {% icon_svg 'arrow-right' %}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

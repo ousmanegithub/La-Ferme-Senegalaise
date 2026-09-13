@@ -1,0 +1,73 @@
+{% load static wagtailcore_tags wagtailuserbar %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}{% endblock %}{% block title_suffix %}{% wagtail_site as current_site %}{% if current_site and current_site.site_name and page.depth > 2 %} · {{ current_site.site_name }}{% endif %}{% endblock %}</title>
+
+    <meta name="description" content="{% block meta_description %}{% if page.search_description %}{{ page.search_description }}{% else %}La Ferme Sénégalaise — production agricole, élevage, pisciculture et transformation agroalimentaire au service de la souveraineté alimentaire du Sénégal.{% endif %}{% endblock %}">
+    <meta name="theme-color" content="#3AAA35">
+    {% if GOOGLE_SITE_VERIFICATION %}<meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}">{% endif %}
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    {# Open Graph / social sharing #}
+    <meta property="og:site_name" content="La Ferme Sénégalaise">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Nourrir l'Humanité en toute humanité — production agricole, élevage et pisciculture intégrés au Sénégal.{% endif %}{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/brand/og-default.jpg' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/brand/favicon-192.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/brand/favicon-180.png' %}">
+
+    {% comment %}
+    Self-hosting brand fonts would raise licensing questions for Century Gothic;
+    Jost (geometric, OFL) + Work Sans stand in for headings/body, Alex Brush
+    (named in the charte) is genuinely open and used for the script accent.
+    {% endcomment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&family=Alex+Brush&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% block extra_css %}{% endblock %}
+
+    {% if request.in_preview_panel %}<base target="_blank">{% endif %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% wagtailuserbar %}
+<a class="skip-link" href="#main-content">Aller au contenu principal</a>
+
+{% include "includes/header.html" %}
+
+<main id="main-content">
+    {% if messages %}
+    <div class="container" style="padding-top: var(--space-md);">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert--error{% else %}alert--success{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+
+{% include "includes/footer.html" %}
+
+<script src="{% static 'js/main.js' %}"></script>
+{% if GA4_MEASUREMENT_ID %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ GA4_MEASUREMENT_ID }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ GA4_MEASUREMENT_ID }}');
+</script>
+{% endif %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

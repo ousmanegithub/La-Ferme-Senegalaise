@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}page-contact-thankyou{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container container--narrow" style="text-align:center;">
+        <div class="value-card__icon" style="margin-inline:auto;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg>
+        </div>
+        <div class="prose" style="margin-top: var(--space-md);">
+            {{ page.thank_you_text|richtext }}
+        </div>
+        <a class="btn btn--primary" style="margin-top: var(--space-lg);" href="/">Retour à l'accueil</a>
+    </div>
+</section>
+{% endblock %}

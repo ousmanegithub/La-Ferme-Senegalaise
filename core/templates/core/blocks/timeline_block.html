@@ -1,0 +1,17 @@
+<section class="section section--alt">
+    <div class="container container--narrow">
+        {% if value.heading %}
+        <div class="section-head section-head--center" style="max-width:none;">
+            <h2>{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+        <div class="timeline">
+            {% for item in value.items %}
+            <div class="timeline__item">
+                <div class="timeline__year">{{ item.year }}</div>
+                <p>{{ item.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

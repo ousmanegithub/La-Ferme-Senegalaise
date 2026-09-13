@@ -1,0 +1,19 @@
+# Core
+Django>=6.1,<6.2
+wagtail>=8.0,<8.1
+
+# Database
+psycopg2-binary>=2.9,<3.0
+
+# Settings / environment
+django-environ>=0.14,<0.15
+
+# Production serving
+gunicorn>=26.0,<27.0
+whitenoise>=6.12,<7.0
+
+# Images
+Pillow>=12.0,<13.0
+
+# Optional: production error monitoring (used only if SENTRY_DSN is set)
+sentry-sdk>=2.0,<3.0

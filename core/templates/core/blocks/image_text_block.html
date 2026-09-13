@@ -1,0 +1,25 @@
+{% load wagtailimages_tags core_tags %}
+<section class="section">
+    <div class="container">
+        <div class="split {% if value.image_position == 'right' %}split--reverse{% endif %}">
+            <div class="split__media">
+                {% if value.image %}
+                {% image value.image fill-900x900 as split_img %}
+                <img src="{{ split_img.url }}" alt="{{ value.heading|default:'' }}" loading="lazy">
+                {% else %}
+                <div class="media-fallback">{% icon_svg value.fallback_icon|default:'leaf' %}</div>
+                {% endif %}
+            </div>
+            <div>
+                {% if value.eyebrow %}<span class="eyebrow">{{ value.eyebrow }}</span>{% endif %}
+                {% if value.heading %}<h2>{{ value.heading }}</h2>{% endif %}
+                <div class="prose">{{ value.body }}</div>
+                {% if value.button and value.button.text %}
+                <a class="btn btn--primary" style="margin-top: var(--space-md);" href="{{ value.button|resolve_button_url }}">
+                    {{ value.button.text }} {% icon_svg 'arrow-right' %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

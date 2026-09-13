@@ -1,0 +1,86 @@
+{% load static wagtailcore_tags core_tags %}
+<header class="site-header">
+    <div class="topbar">
+        <div class="container">
+            <div class="topbar__links">
+                {% if site_settings.phone %}
+                <a href="tel:{{ site_settings.phone|cut:' ' }}">{% icon_svg 'phone' %} {{ site_settings.phone }}</a>
+                {% endif %}
+                {% if site_settings.email %}
+                <a href="mailto:{{ site_settings.email }}">{% icon_svg 'mail' %} {{ site_settings.email }}</a>
+                {% endif %}
+                {% if site_settings.city %}
+                <span class="flex-center gap-xs">{% icon_svg 'map-pin' %} {{ site_settings.city }}</span>
+                {% endif %}
+            </div>
+            <div class="topbar__social">
+                {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener">{% icon_svg 'facebook' %}</a>{% endif %}
+                {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener">{% icon_svg 'instagram' %}</a>{% endif %}
+                {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" aria-label="LinkedIn" target="_blank" rel="noopener">{% icon_svg 'linkedin' %}</a>{% endif %}
+                {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" aria-label="YouTube" target="_blank" rel="noopener">{% icon_svg 'youtube' %}</a>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="brand" aria-label="La Ferme Sénégalaise — accueil">
+                <img src="{% static 'images/brand/logo-header.png' %}" alt="La Ferme Sénégalaise">
+            </a>
+
+            {% main_menu as menu_items %}
+            <nav class="main-nav" aria-label="Navigation principale">
+                <ul class="main-nav__list">
+                    {% for item in menu_items %}
+                    <li class="main-nav__item {% if item.page|is_active_nav_item:request %}is-active{% endif %}">
+                        <a class="main-nav__link" href="{% pageurl item.page %}">
+                            {{ item.page.title }}
+                            {% if item.children %}{% icon_svg 'chevron-down' %}{% endif %}
+                        </a>
+                        {% if item.children %}
+                        <div class="dropdown">
+                            {% for child in item.children %}
+                            <a class="dropdown__link" href="{% pageurl child %}">{{ child.title }}</a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+
+            <div class="navbar__actions">
+                <a href="/contact/" class="btn btn--primary">
+                    Nous contacter {% icon_svg 'arrow-right' %}
+                </a>
+                <button class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Ouvrir le menu">
+                    {% icon_svg 'menu' 'icon--menu' %}
+                    {% icon_svg 'close' 'icon--close' %}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile">
+        <div class="container">
+            {% for item in menu_items %}
+            <div>
+                <a class="mobile-nav__link" href="{% pageurl item.page %}">
+                    {{ item.page.title }}
+                </a>
+                {% if item.children %}
+                <div class="mobile-nav__children">
+                    {% for child in item.children %}
+                    <a class="mobile-nav__link" href="{% pageurl child %}">{{ child.title }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="mobile-nav__actions">
+                <a href="/contact/" class="btn btn--primary btn--block">Nous contacter</a>
+                {% if site_settings.phone %}<a href="tel:{{ site_settings.phone|cut:' ' }}" class="btn btn--secondary btn--block">{% icon_svg 'phone' %} {{ site_settings.phone }}</a>{% endif %}
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags core_tags %}
+
+{% block body_class %}page-locations{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {% include "includes/breadcrumbs.html" %}
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lede">{{ page.intro|richtext }}</div>{% endif %}
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="split" style="align-items:start;">
+            <div id="locations-map" style="height: 560px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);"></div>
+            <div class="grid" style="gap: var(--space-md); max-height: 560px; overflow-y: auto; padding-right: 4px;">
+                {% for location in page.locations.all %}
+                <div class="location-card" data-location-id="{{ location.id }}">
+                    <div class="location-card__icon">{% icon_svg 'map-pin' %}</div>
+                    <div>
+                        <span class="card__meta">{{ location.get_location_type_display }}</span>
+                        <h3 style="font-size: var(--fs-md); margin: 0.2rem 0;">{{ location.name }}</h3>
+                        <p style="margin:0; font-size: var(--fs-sm); color: var(--color-ink-soft);">{{ location.address }}, {{ location.city }}</p>
+                        {% if location.phone %}<p style="margin:0.3rem 0 0; font-size: var(--fs-sm);">{% icon_svg 'phone' %} {{ location.phone }}</p>{% endif %}
+                        {% if location.opening_hours %}<p style="margin:0.2rem 0 0; font-size: var(--fs-xs); color: var(--color-ink-soft);">{% icon_svg 'clock' %} {{ location.opening_hours }}</p>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var mapEl = document.getElementById("locations-map");
+    if (!mapEl || typeof L === "undefined") return;
+    var map = L.map(mapEl);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    var markers = [];
+    {% for location in page.locations.all %}
+    (function () {
+        var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map);
+        marker.bindPopup("<strong>{{ location.name|escapejs }}</strong><br>{{ location.address|escapejs }}, {{ location.city|escapejs }}");
+        markers.push(marker);
+        var card = document.querySelector('[data-location-id="{{ location.id }}"]');
+        if (card) {
+            card.addEventListener("click", function () {
+                map.setView(marker.getLatLng(), 14);
+                marker.openPopup();
+                document.querySelectorAll(".location-card").forEach(function (c) { c.classList.remove("is-active"); });
+                card.classList.add("is-active");
+            });
+        }
+    })();
+    {% endfor %}
+
+    if (markers.length) {
+        var group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.2));
+    } else {
+        map.setView([14.6928, -17.4467], 7);
+    }
+});
+</script>
+{% endblock %}

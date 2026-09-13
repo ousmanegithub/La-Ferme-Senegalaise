@@ -1,0 +1,28 @@
+{% load wagtailimages_tags core_tags %}
+<section class="section">
+    <div class="container">
+        {% if value.heading %}
+        <div class="section-head section-head--center" style="max-width:640px;">
+            <h2>{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+        <div class="grid grid-3">
+            {% for item in value.items %}
+            <div class="testimonial">
+                {% icon_svg 'quote' 'testimonial__icon' %}
+                <p class="testimonial__quote">{{ item.quote }}</p>
+                <div class="testimonial__author">
+                    {% if item.photo %}
+                    {% image item.photo fill-92x92 as photo %}
+                    <img src="{{ photo.url }}" alt="{{ item.author }}">
+                    {% endif %}
+                    <div>
+                        <div class="testimonial__name">{{ item.author }}</div>
+                        {% if item.role %}<div class="testimonial__role">{{ item.role }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

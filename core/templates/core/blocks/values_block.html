@@ -1,0 +1,18 @@
+{% load core_tags %}
+<section class="section section--alt">
+    <div class="container">
+        <div class="section-head section-head--center" style="max-width:640px;">
+            {% if value.eyebrow %}<span class="eyebrow">{{ value.eyebrow }}</span>{% endif %}
+            {% if value.heading %}<h2>{{ value.heading }}</h2>{% endif %}
+        </div>
+        <div class="grid grid-4">
+            {% for card in value.cards %}
+            <div class="value-card">
+                <div class="value-card__icon">{% icon_svg card.icon %}</div>
+                <h3 class="value-card__title">{{ card.title }}</h3>
+                <p class="value-card__text">{{ card.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

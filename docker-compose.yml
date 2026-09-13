@@ -1,0 +1,37 @@
+# Reference deployment stack for a self-managed VPS. Not required for local
+# development (see README "Démarrage local") — use this once a hosting
+# target is chosen, pointed at real values via a real .env file (never the
+# committed .env.example placeholders).
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fermesenegalaise}
+      POSTGRES_USER: ${POSTGRES_USER:-fermesenegalaise}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set a real password in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fermesenegalaise}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: fermesenegalaise.settings.production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
+  media_data:

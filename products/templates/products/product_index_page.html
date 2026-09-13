@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-product-index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {% include "includes/breadcrumbs.html" %}
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lede">{{ page.intro|richtext }}</div>{% endif %}
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        {% if categories %}
+        <div class="gallery-filters">
+            <a href="?" class="btn btn--sm {% if not active_category %}btn--primary{% else %}btn--secondary{% endif %}">Tous</a>
+            {% for cat in categories %}
+            <a href="?categorie={{ cat.slug }}" class="btn btn--sm {% if active_category == cat.slug %}btn--primary{% else %}btn--secondary{% endif %}">
+                {% icon_svg cat.icon %} {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="grid grid-3">
+            {% for product in products %}
+            <article class="card card--relative">
+                <div class="card__media">
+                    {% if product.cover_image %}
+                    {% image product.cover_image fill-500x375 as img %}
+                    <img src="{{ img.url }}" alt="{{ product.title }}" loading="lazy">
+                    {% else %}
+                    <div class="media-fallback">{% icon_svg product.category.icon|default:'leaf' %}</div>
+                    {% endif %}
+                    {% if product.availability != 'available' %}
+                    <span class="badge badge--gold" style="position:absolute; top: 0.75rem; left:0.75rem;">{{ product.get_availability_display }}</span>
+                    {% endif %}
+                </div>
+                <div class="card__body">
+                    {% if product.category %}<span class="card__meta">{{ product.category.name }}</span>{% endif %}
+                    <h3 class="card__title"><a href="{% pageurl product %}">{{ product.title }}</a></h3>
+                    <p class="card__text">{{ product.short_description }}</p>
+                    {% if product.price_indication %}
+                    <div class="card__footer"><strong>{{ product.price_indication }}</strong>{% if product.unit %} <span class="card__meta">/ {{ product.unit }}</span>{% endif %}</div>
+                    {% endif %}
+                </div>
+            </article>
+            {% empty %}
+            <p>Le catalogue sera bientôt disponible dans cette catégorie.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

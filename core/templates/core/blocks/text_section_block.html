@@ -1,0 +1,11 @@
+<section class="section">
+    <div class="container container--narrow">
+        <div class="section-head {% if value.alignment == 'center' %}section-head--center{% endif %}" style="max-width:none;">
+            {% if value.eyebrow %}<span class="eyebrow">{{ value.eyebrow }}</span>{% endif %}
+            {% if value.heading %}<h2>{{ value.heading }}</h2>{% endif %}
+        </div>
+        <div class="prose {% if value.alignment == 'center' %}section-head--center{% endif %}">
+            {{ value.body }}
+        </div>
+    </div>
+</section>

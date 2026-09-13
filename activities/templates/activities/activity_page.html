@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}page-activity{% endblock %}
+
+{% block content %}
+<section class="hero hero--compact {% if not page.cover_image %}hero--no-media{% endif %}">
+    {% if page.cover_image %}
+    <div class="hero__media">
+        {% image page.cover_image fill-1600x800 as img %}
+        <img src="{{ img.url }}" alt="{{ page.title }}">
+    </div>
+    {% endif %}
+    <div class="hero__overlay hero__overlay--brand"></div>
+    <div class="container">
+        <div class="hero__content">
+            <span class="eyebrow">{% icon_svg page.icon %} {{ page.get_icon_display }}</span>
+            <h1>{{ page.title }}</h1>
+            <p class="hero__subheading">{{ page.summary }}</p>
+        </div>
+    </div>
+</section>
+
+<div class="container" style="padding-top: var(--space-md);">
+    {% include "includes/breadcrumbs.html" %}
+</div>
+
+{{ page.body }}
+
+{% if page.gallery_images.all %}
+<section class="section section--alt">
+    <div class="container">
+        <div class="section-head"><h2>Galerie</h2></div>
+        <div class="gallery-grid">
+            {% for item in page.gallery_images.all %}
+            {% image item.image width-1600 as full %}
+            {% image item.image fill-400x400 as thumb %}
+            <div class="gallery-item" data-lightbox-trigger data-full="{{ full.url }}">
+                <img src="{{ thumb.url }}" alt="{{ item.caption }}" loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="section">
+    <div class="container">
+        <div class="cta-banner">
+            <h2>Envie d'en savoir plus sur nos produits&nbsp;?</h2>
+            <p>Découvrez notre catalogue ou contactez notre équipe commerciale.</p>
+            <div class="cta-banner__actions">
+                <a class="btn btn--primary" href="/nos-produits/">Voir nos produits {% icon_svg 'arrow-right' %}</a>
+                <a class="btn btn--secondary btn--on-dark" href="/contact/">Nous contacter</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

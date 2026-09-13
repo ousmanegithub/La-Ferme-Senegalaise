@@ -1,0 +1,16 @@
+{% load wagtailimages_tags %}
+<section class="section section--tight">
+    <div class="container">
+        {% if value.heading %}
+        <div class="section-head section-head--center" style="max-width:none;">
+            <span class="eyebrow" style="justify-content:center;">{{ value.heading }}</span>
+        </div>
+        {% endif %}
+        <div class="logo-cloud">
+            {% for logo in value.logos %}
+            {% image logo max-200x80 as logo_img %}
+            <img src="{{ logo_img.url }}" alt="" loading="lazy">
+            {% endfor %}
+        </div>
+    </div>
+</section>
