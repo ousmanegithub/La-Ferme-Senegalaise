@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var markers = [];
     {% for location in page.locations.all %}
     (function () {
-        var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map);
+        var marker = L.marker([{{ location.latitude|stringformat:"f" }}, {{ location.longitude|stringformat:"f" }}]).addTo(map);
         marker.bindPopup("<strong>{{ location.name|escapejs }}</strong><br>{{ location.address|escapejs }}, {{ location.city|escapejs }}");
         markers.push(marker);
         var card = document.querySelector('[data-location-id="{{ location.id }}"]');
