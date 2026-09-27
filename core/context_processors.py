@@ -12,4 +12,5 @@ def site_settings(request):
         "site_settings": SiteSettings.for_request(request),
         "GA4_MEASUREMENT_ID": getattr(settings, "GA4_MEASUREMENT_ID", ""),
         "GOOGLE_SITE_VERIFICATION": getattr(settings, "GOOGLE_SITE_VERIFICATION", ""),
+        "MAPTILER_API_KEY": getattr(settings, "MAPTILER_API_KEY", ""),
     }

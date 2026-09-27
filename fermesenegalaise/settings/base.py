@@ -259,6 +259,17 @@ CONTACT_FORM_RECIPIENT_EMAIL = env(
 MAP_DEFAULT_CENTER = (14.6928, -17.4467)
 MAP_DEFAULT_ZOOM = 7
 
+# Map tiles for the "Points de vente" page. Free, no-key tile providers
+# (OpenStreetMap's own server, CARTO's anonymous basemaps) are meant for
+# evaluation, not production: OSM's usage policy blocks sites that send it
+# real traffic, and CARTO now serves an "API key required" watermark tile
+# instead of the map. MapTiler's free tier (100 000 loads/month, no card
+# required, https://cloud.maptiler.com/) is the supported production path.
+# Until a key is set, the template falls back to OpenStreetMap's tiles,
+# which is fine for local development but not guaranteed to stay working
+# once the site is live.
+MAPTILER_API_KEY = env("MAPTILER_API_KEY", default="")
+
 # Google Analytics 4 / Search Console, read from env, empty by default so
 # nothing tracks visitors until the client supplies real IDs.
 GA4_MEASUREMENT_ID = env("GA4_MEASUREMENT_ID", default="")

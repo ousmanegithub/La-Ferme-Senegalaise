@@ -46,15 +46,25 @@ document.addEventListener("DOMContentLoaded", function () {
     var mapEl = document.getElementById("locations-map");
     if (!mapEl || typeof L === "undefined") return;
     var map = L.map(mapEl);
-    // The official tile.openstreetmap.org servers are a best-effort demo
-    // service and return 403 once a site sends any real traffic (see their
-    // tile usage policy): CARTO's basemap tiles are free, keyless, and
-    // explicitly meant for production embedding like this.
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>",
-        subdomains: "abcd",
-        maxZoom: 19
-    }).addTo(map);
+    var maptilerKey = "{{ MAPTILER_API_KEY|escapejs }}";
+    var osmAttribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors";
+    if (maptilerKey) {
+        // Supported production path: free tier, no card required.
+        // https://cloud.maptiler.com/
+        L.tileLayer("https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=" + maptilerKey, {
+            attribution: osmAttribution + " &copy; <a href=\"https://www.maptiler.com/copyright/\">MapTiler</a>",
+            maxZoom: 20
+        }).addTo(map);
+    } else {
+        // Fallback while no MAPTILER_API_KEY is configured (see .env.example).
+        // Fine for local development; OpenStreetMap's own tile server is not
+        // meant for a live site and may stop responding under real traffic.
+        console.warn("MAPTILER_API_KEY manquante : la carte utilise le service de secours OpenStreetMap, non garanti en production. Voir .env.example.");
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: osmAttribution,
+            maxZoom: 19
+        }).addTo(map);
+    }
 
     var markers = [];
     {% for location in page.locations.all %}

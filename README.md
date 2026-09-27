@@ -132,6 +132,27 @@ chemin ou recompressez avec ffmpeg :
 ffmpeg -i source.mp4 -vf "scale=1280:-2" -an -c:v libx264 -crf 26 -preset slow -movflags +faststart aviculture.mp4
 ```
 
+### Carte "Points de vente" : clé API
+
+Aucun fournisseur de fond de carte gratuit et sans clé n'est réellement fiable en
+production : OpenStreetMap interdit explicitement l'usage direct de son propre serveur par
+des sites tiers, et CARTO (utilisé un temps sur ce projet) affiche désormais un tuile
+"API key required" à la place de la carte pour qui n'a pas de clé.
+
+Le projet est câblé pour **MapTiler**, dont l'offre gratuite (100 000 chargements de carte
+par mois, sans carte bancaire) suffit largement à ce site :
+
+1. Créer un compte sur <https://cloud.maptiler.com/>.
+2. Dans le menu de gauche, ouvrir **API keys** : une clé par défaut est déjà générée (ou en
+   créer une nouvelle).
+3. Copier cette clé dans le fichier `.env` à la racine du projet (voir `.env.example`) :
+   `MAPTILER_API_KEY=votre_cle`.
+
+Tant qu'aucune clé n'est renseignée, la carte utilise automatiquement le serveur
+d'OpenStreetMap en secours (visible dans la console du navigateur via un avertissement) :
+cela suffit pour développer en local, mais n'est pas garanti de rester fonctionnel une fois
+le site public.
+
 ## Administrer le contenu (guide éditeur)
 
 1. Se connecter sur `/admin/`.
