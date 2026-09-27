@@ -11,7 +11,7 @@ CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS", default=[f"https://{h}" for h in ALLOWED_HOSTS]
 )
 
-# Database — DATABASE_URL, e.g. postgres://user:pass@host:5432/dbname
+# Database: DATABASE_URL, e.g. postgres://user:pass@host:5432/dbname
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["CONN_MAX_AGE"] = 60
 

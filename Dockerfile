@@ -73,7 +73,7 @@ COPY --chown=wagtail:wagtail . .
 USER wagtail
 
 # Collect static files. production.py reads SECRET_KEY/DATABASE_URL eagerly
-# at import time, but collectstatic never touches the database — these
+# at import time, but collectstatic never touches the database: these
 # build-only placeholders just satisfy that import; the real values come
 # from the platform's env vars at `docker run` / deploy time.
 RUN SECRET_KEY="build-time-placeholder" \

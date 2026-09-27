@@ -67,7 +67,7 @@ class ProductPage(Page):
     """
     A single product or product line. `availability` and
     `price_indication` are deliberately simple text fields, not a real
-    price/stock engine — the brief asks for a showcase today with an
+    price/stock engine: the brief asks for a showcase today with an
     e-commerce module "later"; this shape upgrades cleanly (add a real
     Product/Order app that reuses these pages) without a redesign.
     """

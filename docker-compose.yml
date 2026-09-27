@@ -1,5 +1,5 @@
 # Reference deployment stack for a self-managed VPS. Not required for local
-# development (see README "Démarrage local") — use this once a hosting
+# development (see README "Démarrage local"): use this once a hosting
 # target is chosen, pointed at real values via a real .env file (never the
 # committed .env.example placeholders).
 services:

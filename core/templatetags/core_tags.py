@@ -32,7 +32,7 @@ def main_menu(context):
     """
     The primary navigation: live, "show in menu" pages directly under the
     site root, each with its own live/in-menu children for a dropdown.
-    Editors control this entirely from the page tree — no separate
+    Editors control this entirely from the page tree, no separate
     "navigation" admin screen to keep in sync.
     """
     from wagtail.models import Site

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}{% endblock %}{% block title_suffix %}{% wagtail_site as current_site %}{% if current_site and current_site.site_name and page.depth > 2 %} · {{ current_site.site_name }}{% endif %}{% endblock %}</title>
 
-    <meta name="description" content="{% block meta_description %}{% if page.search_description %}{{ page.search_description }}{% else %}La Ferme Sénégalaise — production agricole, élevage, pisciculture et transformation agroalimentaire au service de la souveraineté alimentaire du Sénégal.{% endif %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% if page.search_description %}{{ page.search_description }}{% else %}La Ferme Sénégalaise : production agricole, élevage, pisciculture et transformation agroalimentaire au service de la souveraineté alimentaire du Sénégal.{% endif %}{% endblock %}">
     <meta name="theme-color" content="#3AAA35">
     {% if GOOGLE_SITE_VERIFICATION %}<meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}">{% endif %}
     <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
@@ -14,7 +14,7 @@
     <meta property="og:site_name" content="La Ferme Sénégalaise">
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Nourrir l'Humanité en toute humanité — production agricole, élevage et pisciculture intégrés au Sénégal.{% endif %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Nourrir l'Humanité en toute humanité : production agricole, élevage et pisciculture intégrés au Sénégal.{% endif %}{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:image" content="{% block og_image %}{% static 'images/brand/og-default.jpg' %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">

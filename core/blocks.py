@@ -24,7 +24,7 @@ class ButtonBlock(StructBlock):
     """
     An optional internal page OR an external URL, with a label. Resolve the
     final href in templates with the `resolve_button_url` template filter
-    (core/templatetags/core_tags.py) — `{{ button|resolve_button_url }}`.
+    (core/templatetags/core_tags.py): `{{ button|resolve_button_url }}`.
     """
 
     text = CharBlock(max_length=60, label="Texte du bouton")

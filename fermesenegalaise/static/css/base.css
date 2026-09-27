@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base — reset, typography, layout primitives
+   Base : reset, typography, layout primitives
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }

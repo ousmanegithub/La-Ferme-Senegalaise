@@ -17,7 +17,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# Fast, no-op password hasher for local dev only — never used in production.py.
+# Fast, no-op password hasher for local dev only, never used in production.py.
 if env.bool("FAST_TEST_HASHER", default=False):
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 

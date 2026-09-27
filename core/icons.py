@@ -1,7 +1,7 @@
 """
 A small, hand-drawn set of 24x24 line icons used across the site (via the
-`icon_svg` template tag). Kept as plain inline SVG paths — no icon-font or
-external icon package — so the whole visual language stays self-contained
+`icon_svg` template tag). Kept as plain inline SVG paths, no icon-font or
+external icon package, so the whole visual language stays self-contained
 and themeable with `currentColor`.
 """
 

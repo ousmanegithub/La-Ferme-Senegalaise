@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Design tokens — La Ferme Sénégalaise
+   Design tokens : La Ferme Sénégalaise
    Derived from the official charte graphique (3S Design). Brand hex values
    are kept verbatim as --brand-* ; every *usage* token (--color-*) below is
    picked or adjusted so that text/background pairs clear WCAG AA contrast
-   (4.5:1 for body text, 3:1 for large/bold text and UI elements) — a pure
+   (4.5:1 for body text, 3:1 for large/bold text and UI elements): a pure
    #3AAA35 fill only reaches ~3:1 with white text, so button/link fills use
    a deliberately darkened, still unmistakably "brand green" shade instead.
    ========================================================================== */
@@ -19,16 +19,16 @@
 
   /* --- Usage tokens ------------------------------------------------------ */
   --color-primary: #3AAA35;        /* decorative: icons, large fills, borders */
-  --color-primary-strong: #1F7A1D; /* buttons/links on white — AA safe (5.4:1) */
+  --color-primary-strong: #1F7A1D; /* buttons/links on white, AA safe (5.4:1) */
   --color-primary-strong-hover: #17640F;
-  --color-accent: #95C11F;         /* lime — highlights, tags, underlines */
-  --color-sun: #E7AD13;            /* gold — stats, badges */
-  --color-sunset: #F39242;         /* orange — secondary accent */
-  --color-water: #009FE3;          /* blue — pisciculture / info accents */
+  --color-accent: #95C11F;         /* lime: highlights, tags, underlines */
+  --color-sun: #E7AD13;            /* gold: stats, badges */
+  --color-sunset: #F39242;         /* orange: secondary accent */
+  --color-water: #009FE3;          /* blue: pisciculture / info accents */
 
   --color-ink: #23201c;            /* body text, warm near-black */
   --color-ink-soft: #55504a;       /* secondary text */
-  --color-earth: #634E42;          /* dark neutral — footer, dark sections */
+  --color-earth: #634E42;          /* dark neutral: footer, dark sections */
   --color-earth-deep: #4a3a30;
 
   --color-bg: #ffffff;
@@ -42,8 +42,8 @@
 
   /* --- Typography --------------------------------------------------------
      Century Gothic (per charte) is a licensed desktop font not cleared for
-     web embedding, so we pair it with Jost — an open (OFL), geometric
-     sans in the same spirit — for headings, and Work Sans for body copy
+     web embedding, so we pair it with Jost, an open (OFL) geometric
+     sans in the same spirit, for headings, and Work Sans for body copy
      (better small-size legibility than a geometric face). Alex Brush is
      used exactly as named in the charte for the script tagline accent. */
   --font-heading: "Jost", "Century Gothic", "Poppins", sans-serif;

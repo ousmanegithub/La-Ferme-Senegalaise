@@ -1,4 +1,4 @@
-# La Ferme Sénégalaise — site institutionnel
+# La Ferme Sénégalaise : site institutionnel
 
 Site vitrine professionnel pour **La Ferme Sénégalaise SAS**, bâti sur **Django + Wagtail CMS**,
 conçu pour être administré en autonomie par l'équipe de l'entreprise et pour évoluer vers
@@ -10,6 +10,7 @@ l'e-commerce sans refonte du socle technique.
 - [Démarrage local](#démarrage-local)
 - [Structure du projet](#structure-du-projet)
 - [Système de design](#système-de-design)
+- [Médiathèque (photos et vidéo)](#médiathèque-photos-et-vidéo)
 - [Administrer le contenu (guide éditeur)](#administrer-le-contenu-guide-éditeur)
 - [Déploiement](#déploiement)
 - [État d'avancement et prochaines étapes](#état-davancement-et-prochaines-étapes)
@@ -41,8 +42,9 @@ python manage.py migrate
 # Compte administrateur pour l'admin Wagtail (/admin/)
 python manage.py createsuperuser
 
-# (Optionnel, recommandé la 1ère fois) contenu de démonstration :
-# crée l'arborescence des pages avec le vrai texte du cahier des charges
+# (Optionnel, recommandé la 1ère fois) photos, puis contenu de démonstration :
+# voir la section "Médiathèque" ci-dessous pour import_media
+python manage.py import_media
 python manage.py seed_demo_content
 
 python manage.py runserver
@@ -61,12 +63,12 @@ Pour tester la configuration de production en local, exportez
 fermesenegalaise/        Réglages Django (settings/base|dev|production.py), urls, templates de base
 core/                     Design system partagé : blocs StreamField, icônes SVG, SiteSettings, tags de template
 home/                     Page d'accueil (StreamField libre)
-pages/                    StandardPage — page flexible générique (Qui sommes-nous, Partenaires, mentions légales...)
-activities/               "Nos activités" — page liste + fiches par filière
-products/                 "Nos produits" — catégories + fiches produit (prêt pour l'e-commerce plus tard)
+pages/                    StandardPage : page flexible générique (Qui sommes-nous, Partenaires, mentions légales...)
+activities/               "Nos activités" : page liste + fiches par filière
+products/                 "Nos produits" : catégories + fiches produit (prêt pour l'e-commerce plus tard)
 news/                     "Actualités" / blog
 gallery/                  "Galerie" photos & vidéos, filtrable par catégorie
-locations/                "Points de vente" — carte (Leaflet/OpenStreetMap) + liste
+locations/                "Points de vente" : carte (Leaflet/CARTO) + liste
 contact/                  Formulaire de contact (Wagtail forms + anti-spam invisible) + newsletter
 ```
 
@@ -89,16 +91,46 @@ vert exact n'atteint qu'un contraste d'environ 3:1 avec du texte blanc (sous le 
 d'accessibilité AA de 4.5:1 pour du texte). Le vert de marque reste utilisé tel quel pour
 les grands aplats, icônes et bordures où ce n'est pas un problème.
 
-**Typographies** — Century Gothic (indiquée dans la charte) est une police propriétaire
+**Typographies.** Century Gothic (indiquée dans la charte) est une police propriétaire
 Monotype non clarifiée pour l'intégration web. Le site utilise **Jost** (Google Fonts,
 licence libre OFL), une géométrique très proche dans l'esprit, pour les titres, et
 **Work Sans** pour le texte courant (meilleure lisibilité en petite taille). **Alex Brush**,
 nommée explicitement dans la charte et disponible sur Google Fonts, est utilisée pour
 l'accent script (`Nourrir l'Humanité en toute humanité`).
 
-**Logo** — `fermesenegalaise/static/images/brand/` contient le logo original ainsi que deux
+**Logo.** `fermesenegalaise/static/images/brand/` contient le logo original ainsi que deux
 variantes recadrées : `logo-header.png` (icône + nom, sans la baseline, pour l'en-tête) et
 `favicon-*.png` / `favicon.ico` (juste le pictogramme maison, pour l'onglet navigateur).
+
+## Médiathèque (photos et vidéo)
+
+Les photos fournies vivent dans `docs/photos-source/` (hors dépôt Git, voir `.gitignore` :
+ce sont des binaires volumineux, déjà importés dans la médiathèque Wagtail qui, elle, est
+versionnée via la base de données / le dossier `media/`). La commande suivante les importe
+dans Wagtail avec des titres propres et les rattache automatiquement au bon endroit (hero
+de l'accueil, page Qui sommes-nous, fiches activités, fiches produits) :
+
+```bash
+python manage.py import_media
+```
+
+Elle est idempotente : relancez-la sans risque si vous ajoutez de nouvelles photos dans
+`docs/photos-source/` (mettez alors aussi à jour la liste `IMAGES` en haut du fichier
+`core/management/commands/import_media.py`). Deux filières (Riz & céréales, Prestations de
+services) n'ont volontairement pas reçu de photo faute d'un visuel pertinent dans le lot
+fourni : elles affichent un repli visuel (icône sur fond dégradé) plutôt qu'une image hors
+sujet, jusqu'à ce qu'une vraie photo soit disponible.
+
+La vidéo source (`docs/video-source/`, un plan brut de 78 Mo en 4K) a été recompressée pour
+le web : `fermesenegalaise/static/video/aviculture.mp4` (720p, sans son, ~3 Mo, démarrage
+rapide) avec son image d'aperçu `aviculture-poster.jpg`. Elle est intégrée directement dans
+le gabarit de la page "Production animale" (`activities/templates/activities/activity_page.html`)
+via une balise `<video>` native. Pour la remplacer, déposez le nouveau fichier au même
+chemin ou recompressez avec ffmpeg :
+
+```bash
+ffmpeg -i source.mp4 -vf "scale=1280:-2" -an -c:v libx264 -crf 26 -preset slow -movflags +faststart aviculture.mp4
+```
 
 ## Administrer le contenu (guide éditeur)
 
@@ -110,13 +142,18 @@ variantes recadrées : `logo-header.png` (icône + nom, sans la baseline, pour l
    (Bannière, Chiffres clés, Valeurs, Image + texte, Témoignages...), glisser-déposer pour
    réordonner.
 4. **Réglages du site** (menu Paramètres) centralise téléphone, e-mail, adresse, réseaux
-   sociaux et pages légales — modifiables sans toucher au code, répercutés automatiquement
+   sociaux et pages légales, modifiables sans toucher au code, répercutés automatiquement
    dans l'en-tête et le pied de page.
 5. Une page n'apparaît dans le menu principal que si la case **Afficher dans les menus**
    (onglet **Promotion**) est cochée.
 6. **Formulaire de contact** : les champs sont modifiables depuis la page Contact
    (section "Champs du formulaire") sans toucher au code ; les soumissions sont visibles
    sous **Formulaires → Contact** dans l'admin.
+7. **Points de vente** : la page contient actuellement des sites fictifs autour de Dakar,
+   ajoutés uniquement pour valider l'affichage de la carte. Ouvrez la page dans l'admin,
+   section "Sites", pour les remplacer par les adresses réelles (chaque site a besoin
+   d'une latitude/longitude, faciles à récupérer via un clic droit sur Google Maps ou
+   OpenStreetMap : "Plus d'infos sur cet endroit").
 
 ## Déploiement
 
@@ -135,31 +172,34 @@ Avant la mise en ligne réelle, `fermesenegalaise/settings/production.py` impose
 
 ## État d'avancement et prochaines étapes
 
-**Fait** — socle technique complet et fonctionnel : Django/Wagtail configuré, système de
+**Fait.** Socle technique complet et fonctionnel : Django/Wagtail configuré, système de
 design fidèle à la charte, 9 gabarits de page (Accueil, Qui sommes-nous, Nos activités +
 fiches, Nos produits + fiches, Galerie, Points de vente avec carte, Actualités, Contact,
 Partenaires & investisseurs), SEO (sitemap.xml, robots.txt, meta Open Graph, image de
 partage), formulaire de contact avec piège anti-spam invisible, newsletter, Docker prêt
-pour le déploiement. Arborescence de pages créée avec le texte réel du cahier des charges
-(`python manage.py seed_demo_content`).
+pour le déploiement. Arborescence de pages créée avec le texte réel du cahier des charges,
+largement développé sur "Qui sommes-nous" et chaque fiche activité (`python manage.py
+seed_demo_content`). Médiathèque de photos et vidéo importée et intégrée aux pages
+concernées (`python manage.py import_media`).
 
-**Reste à faire avant la mise en ligne** — ces points nécessitent des informations ou des
+**Reste à faire avant la mise en ligne.** Ces points nécessitent des informations ou des
 décisions propres à l'entreprise, volontairement non inventées :
 
-- [ ] Photos et vidéos réelles des exploitations (Hero, activités, produits, galerie —
-      des aplats de couleur avec icône tiennent la place en attendant).
+- [ ] Compléter la médiathèque : les filières Riz & céréales et Prestations de services
+      n'ont pas encore de photo pertinente (repli visuel en icône en attendant).
 - [ ] Coordonnées réelles (téléphone, e-mail, adresse) dans **Réglages du site**.
-- [ ] Points de vente réels (adresses + coordonnées GPS) dans la page **Points de vente**.
+- [ ] Points de vente réels (adresses + coordonnées GPS) dans la page **Points de vente** :
+      les six sites actuels sont des exemples fictifs autour de Dakar, à remplacer.
 - [ ] Numéro RCCM, NINEA et adresse du siège dans la page **Mentions légales**
       (actuellement marqués `[à compléter]`).
 - [ ] Catalogue produit réel (les 6 produits actuels sont des exemples génériques dérivés
-      de l'objet social, avec prix "sur demande" — à remplacer par le vrai catalogue).
+      de l'objet social, avec prix "sur demande", à remplacer par le vrai catalogue).
 - [ ] Premiers articles d'**Actualités** (page créée vide intentionnellement).
 - [ ] Configuration e-mail (`EMAIL_HOST`...) pour que le formulaire de contact envoie
       réellement des notifications.
 - [ ] Nom de domaine + hébergement définitif.
 
-**Évolutions prévues par le cahier des charges** — la structure est prête à les recevoir :
+**Évolutions prévues par le cahier des charges.** La structure est prête à les recevoir :
 
 - **E-commerce** : `ProductPage` porte déjà `availability`/`unit`/`price_indication` ;
   passer à un vrai panier/paiement s'ajoute par une app `orders` sans redesign des pages

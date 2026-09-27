@@ -16,8 +16,8 @@ class ContactFormField(AbstractFormField):
 class ContactPage(AbstractEmailForm):
     """
     The contact page. Built on Wagtail's form builder (AbstractEmailForm)
-    so an editor can add/reorder/remove fields from the admin — e.g. add a
-    "Société" field for B2B enquiries — without touching code, and every
+    so an editor can add/reorder/remove fields from the admin (e.g. add a
+    "Société" field for B2B enquiries) without touching code, and every
     submission is stored (visible under Forms > Contact in the admin) as
     well as emailed to `to_address`.
     """
@@ -54,7 +54,7 @@ class ContactPage(AbstractEmailForm):
     # A "website" field, hidden with CSS (.form-honeypot in components.css)
     # and never shown to editors in the panel builder. Real visitors never
     # fill it in; bots that auto-fill every field do, and get silently
-    # dropped in process_form_submission instead of a visible rejection —
+    # dropped in process_form_submission instead of a visible rejection:
     # that keeps automated spam scripts from learning to route around it.
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)

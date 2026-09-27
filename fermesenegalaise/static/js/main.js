@@ -1,5 +1,5 @@
 /*
- * La Ferme Sénégalaise — site-wide interactions.
+ * La Ferme Sénégalaise: site-wide interactions.
  * Deliberately dependency-free (no jQuery/React) for a fast, SEO-friendly
  * server-rendered site: this file only progressively enhances markup that
  * already works without JS.

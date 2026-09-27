@@ -34,3 +34,10 @@ server.log
 # Extracted working files (source docs stay, throwaway text dumps don't)
 cahier_extracted.txt
 charte_extracted.txt
+
+# Raw source media (large binaries). Photos are imported into Wagtail's
+# media library (already gitignored above); the video is committed to git
+# only in its compressed static/video/ form. Keep the client's originals
+# locally, out of version control.
+/docs/photos-source/
+/docs/video-source/

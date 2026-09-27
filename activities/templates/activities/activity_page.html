@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags core_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
 {% block body_class %}page-activity{% endblock %}
 
@@ -26,6 +26,23 @@
 </div>
 
 {{ page.body }}
+
+{% if page.slug == "production-animale" %}
+<section class="section section--tint">
+    <div class="container container--narrow">
+        <div class="section-head section-head--center" style="max-width:none;">
+            <span class="eyebrow" style="justify-content:center;">{% icon_svg 'play' %} Immersion</span>
+            <h2>Notre filière avicole en vidéo</h2>
+        </div>
+        <video
+            style="width:100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);"
+            controls preload="metadata"
+            poster="{% static 'video/aviculture-poster.jpg' %}">
+            <source src="{% static 'video/aviculture.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+</section>
+{% endif %}
 
 {% if page.gallery_images.all %}
 <section class="section section--alt">

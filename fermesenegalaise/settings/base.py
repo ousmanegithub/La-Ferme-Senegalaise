@@ -19,7 +19,7 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
 
 env = environ.Env()
-# .env lives at the repo root and is git-ignored — see .env.example for the
+# .env lives at the repo root and is git-ignored, see .env.example for the
 # full list of variables a deployment needs to set.
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -225,7 +225,7 @@ WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'tx
 # Maximum upload size for documents in bytes.
 WAGTAILDOCS_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # 20MB
 
-# Image renditions above this size are rejected — protects the server from
+# Image renditions above this size are rejected: protects the server from
 # an editor uploading an unoptimised 40 MB camera photo.
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # 20MB
 
@@ -251,7 +251,7 @@ CONTACT_FORM_RECIPIENT_EMAIL = env(
     "CONTACT_FORM_RECIPIENT_EMAIL", default="contact@lafermesenegalaise.sn"
 )
 
-# Default map view (centered on Dakar, Sénégal) — Leaflet is loaded from
+# Default map view (centered on Dakar, Sénégal). Leaflet is loaded from
 # cdnjs directly in templates (see locations/contact templates); no
 # django-leaflet dependency, which pulls in GeoDjango/GDAL bindings that
 # aren't available on every deployment target (and aren't needed since
@@ -259,7 +259,7 @@ CONTACT_FORM_RECIPIENT_EMAIL = env(
 MAP_DEFAULT_CENTER = (14.6928, -17.4467)
 MAP_DEFAULT_ZOOM = 7
 
-# Google Analytics 4 / Search Console — read from env, empty by default so
+# Google Analytics 4 / Search Console, read from env, empty by default so
 # nothing tracks visitors until the client supplies real IDs.
 GA4_MEASUREMENT_ID = env("GA4_MEASUREMENT_ID", default="")
 GOOGLE_SITE_VERIFICATION = env("GOOGLE_SITE_VERIFICATION", default="")
