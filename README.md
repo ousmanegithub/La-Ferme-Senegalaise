@@ -178,6 +178,52 @@ le site public.
 
 ## Déploiement
 
+### Mise en ligne rapide (relecture client)
+
+Pour donner au client un lien public pendant qu'il n'y a pas encore d'hébergement définitif,
+le plus rapide est **Render.com** (offre gratuite, ~20 minutes de mise en place, aucune
+carte bancaire requise). Le fichier `render.yaml` à la racine du projet décrit déjà le
+service et la base de données à créer.
+
+1. **Créer un dépôt GitHub** (si ce n'est pas déjà fait) et y pousser ce projet :
+   ```bash
+   git remote add origin https://github.com/<votre-compte>/ferme-senegalaise.git
+   git push -u origin main
+   ```
+2. Créer un compte sur <https://dashboard.render.com/> (le plus simple : "Se connecter avec
+   GitHub").
+3. **New +** → **Blueprint**, choisir le dépôt `ferme-senegalaise`. Render lit `render.yaml`
+   et propose de créer le service web et la base PostgreSQL d'un coup : valider.
+4. Une fois le premier déploiement terminé, aller dans le service → **Environment** et
+   renseigner les deux variables laissées vides volontairement (pas de secret dans le
+   fichier versionné) :
+   - `MAPTILER_API_KEY` : la clé obtenue plus haut.
+   - `CONTACT_FORM_RECIPIENT_EMAIL` : l'adresse e-mail qui doit recevoir les messages du
+     formulaire de contact.
+5. Créer un compte administrateur sur l'instance en ligne, via l'onglet **Shell** du
+   service Render :
+   ```bash
+   python manage.py createsuperuser
+   python manage.py seed_demo_content
+   ```
+6. Le site est accessible sur `https://ferme-senegalaise.onrender.com` (ou le nom choisi à
+   l'étape 3, à répercuter alors dans `ALLOWED_HOSTS`/`BASE_URL`/`CSRF_TRUSTED_ORIGINS` sur
+   Render si différent de `render.yaml`). L'admin est sur `/admin/`.
+
+Deux limites propres à l'offre gratuite de Render, à garder en tête pendant cette phase de
+relecture :
+- Le service "s'endort" après 15 minutes sans visite ; la première page vue ensuite met
+  quelques secondes à charger, le temps qu'il se réveille. Sans incidence pour une
+  consultation ponctuelle.
+- Le disque n'est pas persistant : toute photo ajoutée **directement via l'admin en ligne**
+  serait perdue au prochain déploiement. Pour cette phase, le plus sûr reste de continuer à
+  récupérer les photos/informations du client par un autre canal (WhatsApp, e-mail...) et
+  de les intégrer ici avec `import_media`, comme actuellement. Si le client doit à terme
+  téléverser ses médias lui-même en autonomie, il faudra brancher un stockage externe
+  (Cloudflare R2, S3...) avant d'ouvrir cet accès ; je peux m'en charger le moment venu.
+
+### Hébergement définitif (VPS)
+
 ```bash
 cp .env.example .env   # puis renseigner les vraies valeurs
 docker compose up --build -d
