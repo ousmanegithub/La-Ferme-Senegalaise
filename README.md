@@ -218,6 +218,15 @@ elle a déjà fait son travail : le compte admin n'est créé qu'une fois (tant 
 existe déjà, pour ne jamais écraser un contenu que le client aurait modifié entre-temps
 dans l'admin.
 
+Cette protection a une contrepartie : si vous mettez à jour le contenu ou les photos dans
+`core/management/commands/seed_demo_content.py` / `import_media.py` **après** le tout
+premier déploiement, `--if-empty` les ignore, puisque le site n'est plus "vide" à ses yeux.
+Pour forcer malgré tout une mise à jour complète sur le déploiement suivant : variable
+d'environnement `FORCE_RESEED=true` dans l'onglet **Environment** du service (voir
+`.env.example`), sauvegarder (ce qui relance le déploiement automatiquement), vérifier que
+le site est à jour, puis retirer cette variable pour revenir à la protection normale. Aucun
+push ni modification de code requis pour ce va-et-vient.
+
 Trois limites propres à l'offre gratuite de Render, à garder en tête pendant cette phase de
 relecture :
 - Le service "s'endort" après 15 minutes sans visite ; la première page vue ensuite met

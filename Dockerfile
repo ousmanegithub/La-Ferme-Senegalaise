@@ -93,7 +93,12 @@ RUN SECRET_KEY="build-time-placeholder" \
 #      committed.
 #   4. Seed the page tree, but only the very first time (--if-empty): once
 #      "qui-sommes-nous" exists, this is skipped so a redeploy never
-#      overwrites real edits made since in the Wagtail admin.
+#      overwrites real edits made since in the Wagtail admin. Set
+#      FORCE_RESEED=true (Render: Environment tab, no code change needed)
+#      to deliberately re-run it in full on the next deploy regardless —
+#      useful right after adding new photos/content to this file, before
+#      the client has started editing anything live. Unset it again
+#      afterwards so the next redeploy goes back to the safe default.
 #   5. Start the application server.
 # WARNING:
 #   Running this at container boot (rather than as a separate release-phase
@@ -104,5 +109,5 @@ CMD set -xe; \
     python manage.py migrate --noinput; \
     (python manage.py ensure_superuser || true); \
     (python manage.py import_media || true); \
-    (python manage.py seed_demo_content --if-empty || true); \
+    (if [ "$FORCE_RESEED" = "true" ]; then python manage.py seed_demo_content || true; else python manage.py seed_demo_content --if-empty || true; fi); \
     gunicorn fermesenegalaise.wsgi:application --bind 0.0.0.0:${PORT:-8000}
