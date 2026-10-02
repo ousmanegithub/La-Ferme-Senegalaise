@@ -31,6 +31,10 @@ from pages.models import StandardPage
 from products.models import ProductCategory, ProductIndexPage, ProductPage
 
 
+def site_already_seeded():
+    return StandardPage.objects.filter(slug="qui-sommes-nous").exists()
+
+
 def rich(*paragraphs):
     return "".join(f"<p>{p}</p>" for p in paragraphs)
 
@@ -45,8 +49,28 @@ def img(title):
 class Command(BaseCommand):
     help = "Seed the page tree and site settings with the brief's real content."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--if-empty", action="store_true",
+            help=(
+                "Skip entirely if the site already looks seeded (checked via the "
+                "'qui-sommes-nous' page). Use this for automatic invocations (e.g. "
+                "on every container boot) so a redeploy never overwrites real edits "
+                "made since by a client in the Wagtail admin. Omit it (the default) "
+                "when you deliberately want to re-run this file's updated content "
+                "onto an already-seeded site, as during development."
+            ),
+        )
+
     @transaction.atomic
     def handle(self, *args, **options):
+        if options["if_empty"] and site_already_seeded():
+            self.stdout.write(
+                "Site deja initialise (page 'qui-sommes-nous' presente) : "
+                "--if-empty passe son tour, rien n'est modifie."
+            )
+            return
+
         home = HomePage.objects.first()
         if home is None:
             self.stderr.write("Aucune page d'accueil trouvee : lancez migrate d'abord.")

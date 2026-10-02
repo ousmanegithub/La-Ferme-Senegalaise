@@ -31,6 +31,17 @@ services:
         sync: false
       - key: CONTACT_FORM_RECIPIENT_EMAIL
         sync: false
+      # Bootstraps the first admin account automatically at container boot
+      # (see core/management/commands/ensure_superuser.py) — the free plan
+      # has no Shell/Jobs to run `createsuperuser` by hand. Pick a real
+      # password here; it's only used once, the account then lives in the
+      # database like any other.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
 
 databases:
   - name: ferme-senegalaise-db
