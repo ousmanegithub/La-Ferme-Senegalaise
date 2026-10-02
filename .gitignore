@@ -35,9 +35,14 @@ server.log
 cahier_extracted.txt
 charte_extracted.txt
 
-# Raw source media (large binaries). Photos are imported into Wagtail's
-# media library (already gitignored above); the video is committed to git
-# only in its compressed static/video/ form. Keep the client's originals
-# locally, out of version control.
-/docs/photos-source/
+# Raw video source (78MB 4K original, large binary). The web-ready
+# compressed version is committed instead, see fermesenegalaise/static/video/.
 /docs/video-source/
+
+# docs/photos-source/ IS tracked (see import_media): the hosting platform
+# used for client review (Render free tier) has no persistent disk, so the
+# source photos need to travel with the repo/Docker image for every
+# container boot to re-import them. One exception, kept out of the repo:
+# a third party's brand is visible in it, see import_media.py for why it's
+# not in the IMAGES list.
+docs/photos-source/tim-mossholder-xDwEa2kaeJA-unsplash.jpg

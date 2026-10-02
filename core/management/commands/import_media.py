@@ -1,10 +1,19 @@
 """
-One-off import of the client-supplied photo library into Wagtail's image
-library. Source files live in docs/photos-source/ (kept out of git; see
-.gitignore) and are registered here as wagtail.images.Image objects with
-clean, descriptive titles the rest of the seed content can look up by name.
+Import the client-supplied photo library into Wagtail's image library.
+Source files live in docs/photos-source/ and are registered here as
+wagtail.images.Image objects with clean, descriptive titles the rest of
+the seed content looks up by name.
 
-Safe to re-run: skipped if an image with the same title already exists.
+Safe, and meant, to run on every container boot (see the Dockerfile): it
+checks not just that an Image row exists for a given title, but that its
+file is actually present in storage, and re-imports it if not. That
+self-healing matters on a host with no persistent disk (Render's free
+plan): the database (a separate managed Postgres instance) survives a
+restart, but anything written to local disk, including uploaded image
+files, does not — so after a restart the Image row is there but the file
+behind it is gone. Re-running this then repairs it from the copy of
+docs/photos-source/ baked into the Docker image, instead of leaving a
+broken image icon on the live site.
 """
 from pathlib import Path
 
@@ -45,11 +54,20 @@ class Command(BaseCommand):
             )
             return
 
-        created, skipped = 0, 0
+        created, healed, skipped = 0, 0, 0
         for filename, title in IMAGES:
-            if Image.objects.filter(title=title).exists():
-                skipped += 1
-                continue
+            existing = Image.objects.filter(title=title).first()
+            if existing is not None:
+                file_present = bool(existing.file) and existing.file.storage.exists(existing.file.name)
+                if file_present:
+                    skipped += 1
+                    continue
+                # Row survived (Postgres), but the file behind it didn't
+                # (ephemeral disk reset): drop it and recreate cleanly below,
+                # which also clears any now-dangling cached renditions.
+                existing.delete()
+                healed += 1
+
             path = SOURCE_DIR / filename
             if not path.exists():
                 self.stderr.write(f"Fichier manquant, ignore : {path}")
@@ -61,5 +79,6 @@ class Command(BaseCommand):
             self.stdout.write(f"Importe : {title}")
 
         self.stdout.write(self.style.SUCCESS(
-            f"{created} image(s) importee(s), {skipped} deja presente(s)."
+            f"{created} image(s) importee(s) ({healed} reparee(s)), "
+            f"{skipped} deja presente(s) et intacte(s)."
         ))

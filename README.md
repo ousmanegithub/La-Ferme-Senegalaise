@@ -104,11 +104,11 @@ variantes recadrées : `logo-header.png` (icône + nom, sans la baseline, pour l
 
 ## Médiathèque (photos et vidéo)
 
-Les photos fournies vivent dans `docs/photos-source/` (hors dépôt Git, voir `.gitignore` :
-ce sont des binaires volumineux, déjà importés dans la médiathèque Wagtail qui, elle, est
-versionnée via la base de données / le dossier `media/`). La commande suivante les importe
-dans Wagtail avec des titres propres et les rattache automatiquement au bon endroit (hero
-de l'accueil, page Qui sommes-nous, fiches activités, fiches produits) :
+Les photos fournies vivent dans `docs/photos-source/`, suivies par Git (contrairement à la
+plupart des dossiers de médias, volontairement : voir "Mise en ligne rapide" plus bas pour
+pourquoi). La commande suivante les importe dans Wagtail avec des titres propres et les
+rattache automatiquement au bon endroit (hero de l'accueil, page Qui sommes-nous, fiches
+activités, fiches produits) :
 
 ```bash
 python manage.py import_media
@@ -224,15 +224,20 @@ relecture :
   quelques secondes à charger, le temps qu'il se réveille. Sans incidence pour une
   consultation ponctuelle.
 - Le disque n'est pas persistant : toute photo ajoutée **directement via l'admin en ligne**
-  serait perdue au prochain déploiement. Pour cette phase, le plus sûr reste de continuer à
-  récupérer les photos/informations du client par un autre canal (WhatsApp, e-mail...) et
-  de les intégrer en local avec `import_media` avant de pousser sur GitHub. Si le client doit
-  à terme téléverser ses médias lui-même en autonomie, il faudra brancher un stockage externe
-  (Cloudflare R2, S3...) avant d'ouvrir cet accès ; je peux m'en charger le moment venu.
-- Pour la même raison (pas de disque persistant), les photos de `docs/photos-source/`
-  n'existent que sur votre machine : ce dossier est volontairement exclu de Git (voir
-  `.gitignore`), donc `import_media` n'a rien à importer sur Render et les pages y
-  utiliseront leur repli visuel (icône sur fond dégradé) tant que ce point n'est pas réglé.
+  (plutôt que via `docs/photos-source/` + `import_media`) serait perdue au prochain
+  redémarrage. Pour cette phase, le plus sûr reste de continuer à récupérer les
+  photos/informations du client par un autre canal (WhatsApp, e-mail...) et de les intégrer
+  en local avec `import_media` avant de pousser sur GitHub, comme pour celles déjà en ligne.
+  Si le client doit à terme téléverser ses médias lui-même en autonomie, il faudra brancher
+  un stockage externe (Cloudflare R2, S3...) avant d'ouvrir cet accès ; je peux m'en charger
+  le moment venu.
+
+Les photos du dossier `docs/photos-source/` sont quant à elles suivies par Git (le disque
+non persistant ne les affecte donc pas : `import_media` les réimporte automatiquement à
+chaque démarrage à partir de la copie embarquée dans l'image Docker, et répare même
+silencieusement tout fichier qui aurait disparu d'un redémarrage à l'autre). Seule
+exception volontaire : une photo du lot original montre la marque visible d'un tiers
+("Supreme Berry Farms") et a été exclue, voir `core/management/commands/import_media.py`.
 
 ### Hébergement définitif (VPS)
 

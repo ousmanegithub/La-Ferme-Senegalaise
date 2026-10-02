@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views.generic import TemplateView
+from django.views.static import serve as serve_static_file
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -28,12 +29,23 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-    # Serve static and media files from development server
+    # Serve static files from the development server (WhiteNoise handles
+    # this itself once DEBUG=False, see settings/production.py).
     urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Uploaded media (Wagtail images/documents) still needs a route even with
+# DEBUG=False: Django's static.serve() is normally dev-only, but WhiteNoise
+# (used above for STATIC_ROOT) only handles the build-time static bundle,
+# not runtime uploads, and nothing else serves MEDIA_ROOT by default. For
+# this site's traffic this is a reasonable trade-off; the documented
+# upgrade path once real scale or CDN caching matters is to move
+# MEDIA storage to S3/Cloudflare R2 (see README "Médiathèque"), at which
+# point images are served directly from there and this route goes unused.
+urlpatterns += [
+    path("media/<path:path>", serve_static_file, {"document_root": settings.MEDIA_ROOT}),
+]
 
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
