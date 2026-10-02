@@ -79,6 +79,7 @@ USER wagtail
 RUN SECRET_KEY="build-time-placeholder" \
     DATABASE_URL="sqlite:///build-time-placeholder.sqlite3" \
     ALLOWED_HOSTS="localhost" \
+    BASE_URL="http://localhost" \
     python manage.py collectstatic --noinput --clear
 
 # Runtime command that executes when "docker run" is called, it does the
