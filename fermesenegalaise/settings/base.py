@@ -65,6 +65,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
+    # Required for wagtailsearch's Postgres-backed search index (SearchVectorField,
+    # GinIndex) once the database is PostgreSQL, as in production. Harmless under
+    # SQLite in local dev: this app only adds Python-level fields/lookups, it
+    # doesn't require an actual Postgres connection to be listed here.
+    "django.contrib.postgres",
 ]
 
 MIDDLEWARE = [
